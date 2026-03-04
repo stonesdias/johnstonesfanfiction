@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — John Stones Fanfiction Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --red: #900; --red-dark: #600; --bg: #f7f7f7; --white: #fff; --border: #ccc; --border-light: #e0e0e0; --text: #2a2a2a; --text-muted: #666; --link: #900; }
+    body { font-family: 'Playfair Display', Georgia, serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: #c00; text-decoration: underline; }
+
+    #header { background: var(--red); color: #fff; }
+    #header .inner { max-width: 1000px; margin: 0 auto; padding: 8px 16px; }
+    #header h1 a { color: #fff; font-size: 22px; font-family: 'Playfair Display', Georgia, serif; font-weight: bold; }
+    #header h1 a:hover { text-decoration: none; color: #fdd; }
+    #header .tagline { font-size: 11px; color: #fcc; font-style: italic; margin-top: 2px; }
+
+    #main-nav { background: #c00; border-bottom: 1px solid var(--red-dark); }
+    #main-nav .inner { max-width: 1000px; margin: 0 auto; display: flex; padding: 0 16px; }
+    #main-nav a { color: #fff; font-size: 13px; padding: 7px 12px; display: block; font-family: Arial, sans-serif; }
+    #main-nav a:hover { background: var(--red-dark); text-decoration: none; }
+    #main-nav a.active { background: var(--red-dark); font-weight: bold; }
+
+    #main { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+
+    .about-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      max-width: 680px;
+    }
+    .about-box h2 {
+      font-size: 18px;
+      font-family: 'Playfair Display', Georgia, serif;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      color: var(--red);
+    }
+    .about-box p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .about-box p:last-child { margin-bottom: 0; }
+
+    .links-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 16px 28px;
+      max-width: 680px;
+      margin-top: 12px;
+    }
+    .links-box h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: Arial, sans-serif;
+      background: var(--red);
+      color: #fff;
+      padding: 4px 10px;
+      margin: -16px -28px 14px;
+    }
+    .link-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 13px;
+      font-family: Arial, sans-serif;
+    }
+    .link-row:last-child { border-bottom: none; }
+    .link-label {
+      color: var(--text-muted);
+      width: 60px;
+      flex-shrink: 0;
+    }
+
+    #footer { background: var(--red); color: #fcc; text-align: center; font-size: 11px; font-family: Arial, sans-serif; padding: 10px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <div class="inner">
+    <h1><a href="/">John Stones Fanfiction Archive</a></h1>
+    <div class="tagline">an archive for all my John Stones fanfiction and all his ships :)<br/>by huijsen</div>
+  </div>
+</div>
+
+<div id="main-nav">
+  <div class="inner">
+    <a href="/">Works</a>
+    <a href="/about.html" class="active">About</a>
+  </div>
+</div>
+
+<div id="main">
+  <div class="about-box">
+    <h2>About this archive</h2>
+    <p>
+      Hey everyone! So ever since AO3 went back down I started thinking about how much of a loss it'll be
+      if AO3 comes down permanently — so I decided to code this archive and bring it to life to store all
+      my John Stones fics.
+    </p>
+    <p>
+      All works here are RPF. Please check individual fic headers for ratings and content warnings before reading.
+    </p>
+  </div>
+
+  <div class="links-box">
+    <h3>Find me elsewhere</h3>
+    <div class="link-row">
+      <span class="link-label">AO3</span>
+      <a href="https://archiveofourown.org/users/stonesdias" target="_blank">archiveofourown.org/users/stonesdias</a>
+    </div>
+    <div class="link-row">
+      <span class="link-label">Tumblr</span>
+      <a href="https://www.tumblr.com/blog/huijsen" target="_blank">tumblr.com/blog/huijsen</a>
+    </div>
+  </div>
+</div>
+
+<div id="footer">
+  John Stones Fanfiction Archive &nbsp;·&nbsp; RPF &nbsp;·&nbsp; not for profit
+</div>
+
+</body>
+</html>
