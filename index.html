@@ -1,604 +1,664 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin — Between the Lines</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Crimson+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Between the Lines — A John Stones Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Crimson+Pro:wght@300;400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     :root {
-      --crimson: #8B1A1A;
-      --crimson-dark: #5C0E0E;
-      --gold: #C9A84C;
-      --gold-pale: #E8D5A3;
-      --cream: #FAF6EF;
-      --parchment: #F2EBD9;
-      --ink: #1A1008;
-      --ink-light: #3D2B1F;
-      --muted: #7A6A5A;
-      --border: #D4C4A0;
+      --crimson:     #8B1A1A;
+      --crimson-dark:#5C0E0E;
+      --crimson-deep:#3D0A0A;
+      --gold:        #C9A84C;
+      --gold-pale:   #E8D5A3;
+      --cream:       #FAF6EF;
+      --parchment:   #F2EBD9;
+      --ink:         #1A1008;
+      --ink-light:   #3D2B1F;
+      --muted:       #7A6A5A;
+      --border:      #D4C4A0;
+      --header-h:    72px;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Crimson Pro', Georgia, serif;
+      font-family: 'EB Garamond', Georgia, serif;
       background: var(--cream);
       color: var(--ink);
       min-height: 100vh;
     }
 
+    /* ── HEADER ── */
     header {
-      background: linear-gradient(135deg, #3D0A0A 0%, #8B1A1A 60%, #5C0E0E 100%);
-      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--crimson-deep) 0%, var(--crimson) 60%, var(--crimson-dark) 100%);
+      height: var(--header-h);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 2.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
       border-bottom: 2px solid var(--gold);
     }
-    .admin-brand {
+
+    .site-title {
       font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
       color: var(--gold-pale);
-      font-size: 1.2rem;
-    }
-    .admin-brand span { font-style: italic; color: var(--gold); }
-    .back-link {
-      font-size: 0.8rem;
-      color: rgba(232,213,163,0.6);
+      letter-spacing: 0.04em;
       text-decoration: none;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .back-link:hover { color: var(--gold-pale); }
-
-    .admin-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      min-height: calc(100vh - 60px);
-    }
-
-    /* Sidebar */
-    .sidebar {
-      background: #fff;
-      border-right: 1px solid var(--border);
-      padding: 1.5rem 0;
-    }
-    .sidebar-section {
-      padding: 0.4rem 1.2rem;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-top: 1rem;
-    }
-    .sidebar-btn {
-      display: block;
-      width: 100%;
-      text-align: left;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      background: none;
       cursor: pointer;
-      font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
-      color: var(--ink-light);
-      transition: background 0.15s;
     }
-    .sidebar-btn:hover { background: var(--parchment); }
-    .sidebar-btn.active {
-      background: rgba(139,26,26,0.08);
-      color: var(--crimson);
-      border-left: 3px solid var(--crimson);
-    }
-
-    /* Main area */
-    .main-area {
-      padding: 2rem 2.5rem;
-      max-width: 800px;
-    }
-
-    .panel { display: none; }
-    .panel.active { display: block; }
-
-    h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      color: var(--ink);
-      margin-bottom: 0.3rem;
-    }
-    .panel-sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-
-    /* Form */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
-      margin-bottom: 1.2rem;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
-    .form-group.full { grid-column: 1 / -1; }
-
-    label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-    input[type=text], input[type=number], input[type=date], select, textarea {
-      font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
-      padding: 0.5rem 0.7rem;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      background: #fff;
-      color: var(--ink);
-      transition: border-color 0.15s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--crimson);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-      line-height: 1.6;
-    }
-    #body-field { min-height: 340px; font-size: 1rem; }
-
-    .help-text {
-      font-size: 0.8rem;
-      color: var(--muted);
+    .site-title span {
       font-style: italic;
+      color: var(--gold);
     }
 
-    /* Toolbar */
-    .editor-toolbar {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.4rem;
-    }
-    .tb-btn {
+    .header-sub {
       font-family: 'Crimson Pro', serif;
       font-size: 0.85rem;
-      padding: 0.25rem 0.6rem;
-      border: 1px solid var(--border);
-      background: var(--parchment);
-      cursor: pointer;
-      border-radius: 2px;
-      color: var(--ink-light);
-      transition: background 0.1s;
+      color: rgba(232,213,163,0.65);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
-    .tb-btn:hover { background: var(--border); }
 
-    /* Buttons */
-    .btn-row {
+    nav a {
+      color: var(--gold-pale);
+      text-decoration: none;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: 1.8rem;
+      opacity: 0.85;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    nav a:hover { opacity: 1; color: var(--gold); }
+
+    /* ── HERO BANNER ── */
+    .hero {
+      background: linear-gradient(180deg, var(--crimson-dark) 0%, var(--crimson-deep) 100%);
+      padding: 3.5rem 2.5rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 120%, rgba(201,168,76,0.12) 0%, transparent 65%);
+    }
+    .hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      color: var(--gold-pale);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      position: relative;
+    }
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1rem auto;
+      opacity: 0.6;
+    }
+    .hero-stats {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.8rem;
+      color: rgba(232,213,163,0.5);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── FILTERS ── */
+    .filters {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
       display: flex;
       gap: 1rem;
-      margin-top: 1.5rem;
+      flex-wrap: wrap;
       align-items: center;
     }
-    .btn-primary {
-      background: var(--crimson);
-      color: #fff;
-      border: none;
-      padding: 0.65rem 1.8rem;
+    .filters label {
       font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
-      cursor: pointer;
-      border-radius: 3px;
-      letter-spacing: 0.05em;
-      transition: background 0.15s;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
     }
-    .btn-primary:hover { background: var(--crimson-dark); }
-    .btn-secondary {
-      background: none;
-      color: var(--crimson);
-      border: 1px solid var(--crimson);
-      padding: 0.65rem 1.4rem;
-      font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
-      cursor: pointer;
-      border-radius: 3px;
-      transition: background 0.15s;
-    }
-    .btn-secondary:hover { background: rgba(139,26,26,0.07); }
-
-    /* Toast */
-    #toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #2a6e2a;
-      color: #fff;
-      padding: 0.8rem 1.4rem;
-      border-radius: 4px;
-      font-family: 'Crimson Pro', serif;
+    .filters select, .filters input {
+      font-family: 'EB Garamond', serif;
       font-size: 0.95rem;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      z-index: 999;
-    }
-    #toast.show { opacity: 1; }
-
-    /* Fic list in admin */
-    .admin-fic-item {
-      background: #fff;
+      background: var(--cream);
       border: 1px solid var(--border);
+      padding: 0.3rem 0.6rem;
+      color: var(--ink);
       border-radius: 3px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 0.7rem;
+      cursor: pointer;
+    }
+    .filters select:focus, .filters input:focus {
+      outline: 1px solid var(--crimson);
+    }
+
+    /* ── FIC COUNT ── */
+    .results-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
+      align-items: baseline;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
     }
-    .admin-fic-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
-      color: var(--crimson);
-    }
-    .admin-fic-meta { font-size: 0.85rem; color: var(--muted); }
-    .btn-edit {
+    .results-count {
       font-family: 'Crimson Pro', serif;
       font-size: 0.85rem;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid var(--crimson);
-      color: var(--crimson);
-      background: none;
-      border-radius: 3px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-edit:hover { background: rgba(139,26,26,0.07); }
-    .btn-delete {
-      font-family: 'Crimson Pro', serif;
-      font-size: 0.85rem;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid #c0392b;
-      color: #c0392b;
-      background: none;
-      border-radius: 3px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-delete:hover { background: rgba(192,57,43,0.07); }
-
-    .empty-admin {
-      text-align: center;
-      padding: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       color: var(--muted);
-      font-style: italic;
+    }
+    .sort-label {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
-    /* Instructions panel */
-    .instruction-block {
+    /* ── FIC CARD ── */
+    .fic-list { display: flex; flex-direction: column; gap: 0; }
+
+    .fic-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 1.4rem 1.6rem;
+      transition: background 0.15s;
+      cursor: pointer;
+      position: relative;
+    }
+    .fic-card:first-child { border-top: 1px solid var(--border); border-radius: 4px 4px 0 0; }
+    .fic-card:last-child  { border-radius: 0 0 4px 4px; }
+    .fic-card:only-child  { border-radius: 4px; border-top: 1px solid var(--border); }
+    .fic-card:hover       { background: var(--parchment); }
+
+    .fic-card-inner { display: flex; gap: 1.2rem; }
+
+    .rating-badge {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-top: 0.1rem;
+    }
+    .rating-G  { background: #4a9b4a; color: #fff; }
+    .rating-T  { background: #e6a817; color: #fff; }
+    .rating-M  { background: #d4541a; color: #fff; }
+    .rating-E  { background: #8B1A1A; color: #fff; }
+    .rating-NR { background: #888; color: #fff; }
+
+    .fic-body { flex: 1; min-width: 0; }
+
+    .fic-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--crimson);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      line-height: 1.3;
+    }
+    .fic-card:hover .fic-title { text-decoration: underline; }
+
+    .fic-meta-line {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .fic-meta-line strong { color: var(--ink-light); }
+
+    .fic-summary {
+      font-size: 0.97rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      margin-bottom: 0.7rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .fic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .tag {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.78rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
       background: var(--parchment);
       border: 1px solid var(--border);
-      border-left: 3px solid var(--gold);
-      padding: 1rem 1.2rem;
-      margin-bottom: 1.2rem;
-      border-radius: 0 3px 3px 0;
-      font-size: 0.95rem;
-      line-height: 1.7;
       color: var(--ink-light);
-    }
-    .instruction-block code {
-      background: rgba(0,0,0,0.07);
-      padding: 0.1rem 0.3rem;
-      border-radius: 2px;
-      font-size: 0.85em;
+      white-space: nowrap;
     }
 
-    @media (max-width: 700px) {
-      .admin-layout { grid-template-columns: 1fr; }
-      .sidebar { display: flex; flex-wrap: wrap; padding: 0.5rem; border-right: none; border-bottom: 1px solid var(--border); }
-      .sidebar-section { display: none; }
-      .sidebar-btn { width: auto; padding: 0.4rem 0.8rem; font-size: 0.9rem; }
-      .form-grid { grid-template-columns: 1fr; }
-      .main-area { padding: 1.2rem; }
+    .fic-footer {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.6rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed var(--border);
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .fic-footer span::before { margin-right: 0.3rem; }
+
+    /* ── SERIES BADGE ── */
+    .series-tag {
+      display: inline-block;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.78rem;
+      padding: 0.1rem 0.5rem;
+      background: rgba(139,26,26,0.08);
+      border: 1px solid rgba(139,26,26,0.25);
+      color: var(--crimson-dark);
+      border-radius: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+    .empty-state p { font-size: 1.1rem; }
+
+    /* ── FIC READER ── */
+    #reader-view {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    .reader-back {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--crimson);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 2rem;
+      text-decoration: none;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+    .reader-back:hover { text-decoration: underline; }
+
+    .reader-header {
+      border-bottom: 2px solid var(--crimson);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .reader-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .reader-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .reader-meta strong { color: var(--ink-light); }
+
+    .reader-summary {
+      background: var(--parchment);
+      border-left: 3px solid var(--crimson);
+      padding: 0.8rem 1rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .reader-body {
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+    .reader-body p { margin-bottom: 1.2em; }
+    .reader-body h2, .reader-body h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--crimson-dark);
+      margin: 2em 0 0.8em;
+    }
+    .reader-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2em auto;
+      width: 50%;
+    }
+    .reader-body em { font-style: italic; }
+    .reader-body strong { font-weight: 600; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--crimson-deep);
+      border-top: 1px solid var(--gold);
+      padding: 1.5rem 2.5rem;
+      text-align: center;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.8rem;
+      color: rgba(232,213,163,0.45);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; }
+      .header-sub { display: none; }
+      .fic-card { padding: 1rem; }
+      nav a { margin-left: 1rem; font-size: 0.8rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="admin-brand">Between <span>the Lines</span> — Admin</div>
-  <a href="/" class="back-link">← View site</a>
+  <div>
+    <div class="site-title" onclick="showList()">Between <span>the Lines</span></div>
+    <div class="header-sub">A John Stones Fanfiction Archive</div>
+  </div>
+  <nav>
+    <a href="#" onclick="showList(); return false;">Works</a>
+    <a href="#about">About</a>
+  </nav>
 </header>
 
-<div class="admin-layout">
-  <aside class="sidebar">
-    <div class="sidebar-section">Works</div>
-    <button class="sidebar-btn active" onclick="showPanel('new-fic', this)">＋ New Fic</button>
-    <button class="sidebar-btn" onclick="showPanel('manage', this)">All Works</button>
-    <div class="sidebar-section">Help</div>
-    <button class="sidebar-btn" onclick="showPanel('guide', this)">Setup Guide</button>
-  </aside>
+<!-- LIST VIEW -->
+<div id="list-view">
+  <div class="hero">
+    <h2>All the John Stones fics you never knew you needed.</h2>
+    <div class="hero-divider"></div>
+    <div class="hero-stats" id="hero-stats">Loading works…</div>
+  </div>
 
-  <main class="main-area">
-
-    <!-- NEW FIC PANEL -->
-    <div class="panel active" id="panel-new-fic">
-      <h2 id="form-heading">New Work</h2>
-      <p class="panel-sub" id="form-sub">Fill in the details below and hit Publish.</p>
-
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>Title *</label>
-          <input type="text" id="f-title" placeholder="e.g. Steadfast"/>
-        </div>
-        <div class="form-group">
-          <label>Pairing</label>
-          <input type="text" id="f-pairing" placeholder="e.g. John Stones/Rúben Dias"/>
-        </div>
-        <div class="form-group">
-          <label>Rating</label>
-          <select id="f-rating">
-            <option value="G">G – General</option>
-            <option value="T" selected>T – Teen</option>
-            <option value="M">M – Mature</option>
-            <option value="E">E – Explicit</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Word Count</label>
-          <input type="number" id="f-wordcount" placeholder="e.g. 4800" min="0"/>
-        </div>
-        <div class="form-group">
-          <label>Chapters</label>
-          <input type="number" id="f-chapters" placeholder="1" min="1" value="1"/>
-        </div>
-        <div class="form-group">
-          <label>Series Name</label>
-          <input type="text" id="f-series" placeholder="Leave blank if standalone"/>
-        </div>
-        <div class="form-group">
-          <label>Date Posted</label>
-          <input type="date" id="f-date"/>
-        </div>
-        <div class="form-group full">
-          <label>Tags / Warnings <span class="help-text">(comma-separated)</span></label>
-          <input type="text" id="f-tags" placeholder="hurt/comfort, post-match, pining"/>
-        </div>
-        <div class="form-group full">
-          <label>Summary</label>
-          <textarea id="f-summary" placeholder="Write your summary here…" style="min-height:80px"></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Body <span class="help-text">(markdown supported — **bold**, *italic*, --- for scene break)</span></label>
-          <div class="editor-toolbar">
-            <button class="tb-btn" onclick="wrapText('**','**')"><b>B</b></button>
-            <button class="tb-btn" onclick="wrapText('*','*')"><i>I</i></button>
-            <button class="tb-btn" onclick="insertText('\n\n---\n\n')">— scene break</button>
-            <button class="tb-btn" onclick="insertText('\n\n')">¶ paragraph</button>
-          </div>
-          <textarea id="body-field" placeholder="Paste or type your fic here…"></textarea>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-primary" onclick="saveFic()">Publish</button>
-        <button class="btn-secondary" onclick="clearForm()">Clear</button>
-        <span id="save-status" style="color:var(--muted);font-size:0.9rem;"></span>
-      </div>
+  <div class="container">
+    <div class="filters">
+      <label>Rating</label>
+      <select id="filter-rating" onchange="applyFilters()">
+        <option value="">All ratings</option>
+        <option value="G">G</option>
+        <option value="T">T</option>
+        <option value="M">M</option>
+        <option value="E">E</option>
+      </select>
+      <label>Pairing</label>
+      <select id="filter-pairing" onchange="applyFilters()">
+        <option value="">All pairings</option>
+      </select>
+      <label>Search</label>
+      <input type="text" id="filter-search" placeholder="title, tags…" oninput="applyFilters()" />
     </div>
 
-    <!-- MANAGE PANEL -->
-    <div class="panel" id="panel-manage">
-      <h2>All Works</h2>
-      <p class="panel-sub">Click a fic to edit it, or delete it permanently.</p>
-      <div id="admin-fic-list"></div>
+    <div class="results-header">
+      <span class="results-count" id="results-count">— works</span>
+      <span class="sort-label">sorted by date posted</span>
     </div>
 
-    <!-- GUIDE PANEL -->
-    <div class="panel" id="panel-guide">
-      <h2>Setup Guide</h2>
-      <p class="panel-sub">How to get your site live on Netlify — no coding needed.</p>
-
-      <div class="instruction-block">
-        <strong>Step 1 — Upload files to GitHub</strong><br>
-        Go to <a href="https://github.com" target="_blank">github.com</a> → your repo → upload all these files keeping the same folder structure. Make sure <code>fics/index.json</code> exists (upload the one included in the package).
-      </div>
-      <div class="instruction-block">
-        <strong>Step 2 — Connect to Netlify</strong><br>
-        Go to <a href="https://netlify.com" target="_blank">netlify.com</a> → Add new site → Import from GitHub → select your repo → Deploy. Done. Your site is live.
-      </div>
-      <div class="instruction-block">
-        <strong>Step 3 — Using the admin panel</strong><br>
-        This admin panel saves fics to your browser. To publish them to your live site, click <strong>Export fics.json</strong> below, then upload that file to your GitHub repo at <code>fics/index.json</code>. Netlify auto-rebuilds within ~30 seconds.
-      </div>
-      <div class="instruction-block">
-        <strong>That's it!</strong> Your workflow is: write fic here → Publish → Export JSON → upload to GitHub → site updates. You only touch GitHub for that one file upload step.
-      </div>
-
-      <div class="btn-row" style="margin-top:2rem">
-        <button class="btn-primary" onclick="exportFics()">⬇ Export fics.json</button>
-      </div>
+    <div class="fic-list" id="fic-list">
+      <div class="loading">Loading works…</div>
     </div>
-
-  </main>
+  </div>
 </div>
 
-<div id="toast">Saved!</div>
+<!-- READER VIEW -->
+<div id="reader-view">
+  <button class="reader-back" onclick="showList()">← Back to works</button>
+  <div class="reader-header">
+    <h1 class="reader-title" id="reader-title"></h1>
+    <div class="reader-meta" id="reader-meta"></div>
+    <div class="reader-summary" id="reader-summary"></div>
+    <div class="fic-tags" id="reader-tags"></div>
+  </div>
+  <div class="reader-body" id="reader-body"></div>
+</div>
+
+<footer>
+  Between the Lines &nbsp;·&nbsp; A personal John Stones archive &nbsp;·&nbsp; Not for profit
+</footer>
 
 <script>
-// ── STORAGE ───────────────────────────────────────────────────────────────────
-const STORAGE_KEY = 'btl_fics';
-let fics = [];
-let editingId = null;
+// ── DATA ──────────────────────────────────────────────────────────────────────
+// Fics are loaded from /fics/index.json which is auto-generated by Netlify CMS
+let ALL_FICS = [];
+let FILTERED  = [];
 
-function loadFromStorage() {
+async function loadFics() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    fics = raw ? JSON.parse(raw) : [];
-  } catch { fics = []; }
-}
-
-function saveToStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(fics));
-}
-
-// ── PANELS ────────────────────────────────────────────────────────────────────
-function showPanel(name, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (name === 'manage') renderAdminList();
-}
-
-// ── FORM ──────────────────────────────────────────────────────────────────────
-function setToday() {
-  const d = document.getElementById('f-date');
-  if (!d.value) d.value = new Date().toISOString().split('T')[0];
-}
-setToday();
-
-function clearForm() {
-  ['f-title','f-pairing','f-tags','f-summary','body-field','f-series','f-wordcount'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('f-rating').value = 'T';
-  document.getElementById('f-chapters').value = '1';
-  setToday();
-  editingId = null;
-  document.getElementById('form-heading').textContent = 'New Work';
-  document.getElementById('form-sub').textContent = 'Fill in the details below and hit Publish.';
-  document.getElementById('save-status').textContent = '';
-}
-
-function saveFic() {
-  const title = document.getElementById('f-title').value.trim();
-  if (!title) { alert('Please enter a title.'); return; }
-
-  const tagsRaw = document.getElementById('f-tags').value;
-  const tags = tagsRaw.split(',').map(t=>t.trim()).filter(Boolean);
-
-  const fic = {
-    id: editingId || ('fic-' + Date.now()),
-    title,
-    pairing:   document.getElementById('f-pairing').value.trim(),
-    rating:    document.getElementById('f-rating').value,
-    wordcount: parseInt(document.getElementById('f-wordcount').value)||0,
-    chapters:  parseInt(document.getElementById('f-chapters').value)||1,
-    series:    document.getElementById('f-series').value.trim(),
-    date:      document.getElementById('f-date').value,
-    tags,
-    summary:   document.getElementById('f-summary').value.trim(),
-    body:      document.getElementById('body-field').value
-  };
-
-  if (editingId) {
-    const idx = fics.findIndex(f => f.id === editingId);
-    if (idx > -1) fics[idx] = fic;
-  } else {
-    fics.unshift(fic);
+    const res = await fetch('/fics/index.json');
+    if (!res.ok) throw new Error('No fics file yet');
+    ALL_FICS = await res.json();
+  } catch {
+    ALL_FICS = SAMPLE_FICS; // fallback to samples while setting up
   }
-
-  saveToStorage();
-  toast('Saved! Remember to export and upload fics.json to publish.');
-  document.getElementById('save-status').textContent = '✓ Saved to browser';
-  clearForm();
+  // sort newest first
+  ALL_FICS.sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+  populatePairingFilter();
+  applyFilters();
+  updateHeroStats();
 }
 
-// ── MANAGE ────────────────────────────────────────────────────────────────────
-function renderAdminList() {
-  const el = document.getElementById('admin-fic-list');
-  if (!fics.length) {
-    el.innerHTML = '<div class="empty-admin">No works yet. Add your first fic!</div>';
+// ── SAMPLE DATA (shown until real fics are added) ─────────────────────────────
+const SAMPLE_FICS = [
+  {
+    id: "sample-1",
+    title: "Steadfast",
+    pairing: "John Stones/Rúben Dias",
+    rating: "T",
+    tags: ["hurt/comfort", "post-match", "shoulder to lean on"],
+    summary: "After a bruising defeat at Old Trafford, John doesn't want to talk. Rúben doesn't make him.",
+    wordcount: 4820,
+    chapters: 1,
+    series: "",
+    date: "2024-11-10",
+    body: "This is a sample fic. Add your real fics through the admin panel at **/admin**.\n\nOnce you've published your first work, this sample will disappear."
+  },
+  {
+    id: "sample-2",
+    title: "The Weight of Ordinary Things",
+    pairing: "John Stones/Rúben Dias",
+    rating: "M",
+    tags: ["domestic", "established relationship", "slow mornings", "fluff"],
+    summary: "Sunday. No training. Just the flat, the light coming through the wrong windows, and the particular silence of a man who has finally stopped bracing for impact.",
+    wordcount: 6200,
+    chapters: 1,
+    series: "Ordinary Things",
+    date: "2024-10-28",
+    body: "This is a sample fic. Add your real fics through the **admin panel**."
+  },
+  {
+    id: "sample-3",
+    title: "Fracture Line",
+    pairing: "John Stones & England Squad",
+    rating: "G",
+    tags: ["gen", "injury", "friendship", "England NT"],
+    summary: "A stress fracture. A hotel room. Four teammates who don't know how to say *stay*.",
+    wordcount: 3100,
+    chapters: 1,
+    series: "",
+    date: "2024-09-15",
+    body: "This is a sample fic. Add your real fics through the **admin panel**."
+  }
+];
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function populatePairingFilter() {
+  const sel = document.getElementById('filter-pairing');
+  const pairings = [...new Set(ALL_FICS.map(f => f.pairing).filter(Boolean))].sort();
+  pairings.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    sel.appendChild(o);
+  });
+}
+
+function applyFilters() {
+  const rating  = document.getElementById('filter-rating').value;
+  const pairing = document.getElementById('filter-pairing').value;
+  const search  = document.getElementById('filter-search').value.toLowerCase();
+
+  FILTERED = ALL_FICS.filter(f => {
+    if (rating  && f.rating  !== rating)  return false;
+    if (pairing && f.pairing !== pairing) return false;
+    if (search) {
+      const haystack = [f.title, ...(f.tags||[])].join(' ').toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+
+  renderList();
+}
+
+function updateHeroStats() {
+  const total = ALL_FICS.length;
+  const words = ALL_FICS.reduce((s,f) => s + (f.wordcount||0), 0);
+  document.getElementById('hero-stats').textContent =
+    `${total} work${total!==1?'s':''} · ${words.toLocaleString()} words total`;
+}
+
+// ── RENDER LIST ───────────────────────────────────────────────────────────────
+function renderList() {
+  const el = document.getElementById('fic-list');
+  document.getElementById('results-count').textContent =
+    `${FILTERED.length} work${FILTERED.length!==1?'s':''}`;
+
+  if (!FILTERED.length) {
+    el.innerHTML = `<div class="empty-state"><p>No works match your filters.</p></div>`;
     return;
   }
-  el.innerHTML = fics.map(f => `
-    <div class="admin-fic-item">
-      <div>
-        <div class="admin-fic-title">${f.title}</div>
-        <div class="admin-fic-meta">${f.pairing||'Gen'} · ${f.rating} · ${(f.wordcount||0).toLocaleString()} words · ${f.date||''}</div>
-      </div>
-      <div style="display:flex;gap:0.5rem;flex-shrink:0">
-        <button class="btn-edit" onclick="editFic('${f.id}')">Edit</button>
-        <button class="btn-delete" onclick="deleteFic('${f.id}')">Delete</button>
+
+  el.innerHTML = FILTERED.map(f => `
+    <div class="fic-card" onclick="openFic('${f.id}')">
+      <div class="fic-card-inner">
+        <div class="rating-badge rating-${f.rating||'NR'}">${f.rating||'—'}</div>
+        <div class="fic-body">
+          ${f.series ? `<div class="series-tag">Part of: ${f.series}</div>` : ''}
+          <div class="fic-title">${f.title}</div>
+          <div class="fic-meta-line">
+            <strong>${f.pairing||'Gen'}</strong>
+            ${f.date ? ' · ' + formatDate(f.date) : ''}
+          </div>
+          <div class="fic-summary">${f.summary||''}</div>
+          ${f.tags?.length ? `<div class="fic-tags">${f.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+          <div class="fic-footer">
+            <span>📄 ${(f.wordcount||0).toLocaleString()} words</span>
+            <span>📚 ${f.chapters||1} chapter${(f.chapters||1)!==1?'s':''}</span>
+          </div>
+        </div>
       </div>
     </div>
   `).join('');
 }
 
-function editFic(id) {
-  const f = fics.find(x => x.id === id);
+// ── READER ────────────────────────────────────────────────────────────────────
+function openFic(id) {
+  const f = ALL_FICS.find(x => x.id === id);
   if (!f) return;
-  editingId = id;
-  document.getElementById('f-title').value     = f.title||'';
-  document.getElementById('f-pairing').value   = f.pairing||'';
-  document.getElementById('f-rating').value    = f.rating||'T';
-  document.getElementById('f-wordcount').value = f.wordcount||'';
-  document.getElementById('f-chapters').value  = f.chapters||1;
-  document.getElementById('f-series').value    = f.series||'';
-  document.getElementById('f-date').value      = f.date||'';
-  document.getElementById('f-tags').value      = (f.tags||[]).join(', ');
-  document.getElementById('f-summary').value   = f.summary||'';
-  document.getElementById('body-field').value  = f.body||'';
-  document.getElementById('form-heading').textContent = 'Edit: ' + f.title;
-  document.getElementById('form-sub').textContent = 'Make changes and hit Publish to update.';
-  showPanel('new-fic', document.querySelector('.sidebar-btn'));
-  window.scrollTo(0,0);
+
+  document.getElementById('reader-title').textContent = f.title;
+
+  document.getElementById('reader-meta').innerHTML = `
+    <span><strong>Pairing:</strong> ${f.pairing||'Gen'}</span>
+    <span><strong>Rating:</strong> ${f.rating||'—'}</span>
+    <span><strong>Words:</strong> ${(f.wordcount||0).toLocaleString()}</span>
+    <span><strong>Chapters:</strong> ${f.chapters||1}</span>
+    ${f.series ? `<span><strong>Series:</strong> ${f.series}</span>` : ''}
+    ${f.date ? `<span><strong>Posted:</strong> ${formatDate(f.date)}</span>` : ''}
+  `;
+
+  document.getElementById('reader-summary').textContent = f.summary||'';
+
+  document.getElementById('reader-tags').innerHTML =
+    (f.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+
+  document.getElementById('reader-body').innerHTML =
+    typeof marked !== 'undefined' ? marked.parse(f.body||'') : (f.body||'').replace(/\n/g,'<br>');
+
+  document.getElementById('list-view').style.display   = 'none';
+  document.getElementById('reader-view').style.display = 'block';
+  window.scrollTo(0, 0);
 }
 
-function deleteFic(id) {
-  const f = fics.find(x => x.id === id);
-  if (!f) return;
-  if (!confirm(`Delete "${f.title}"? This cannot be undone.`)) return;
-  fics = fics.filter(x => x.id !== id);
-  saveToStorage();
-  renderAdminList();
-  toast('Deleted.');
+function showList() {
+  document.getElementById('list-view').style.display   = 'block';
+  document.getElementById('reader-view').style.display = 'none';
+  window.scrollTo(0, 0);
 }
 
-// ── EXPORT ────────────────────────────────────────────────────────────────────
-function exportFics() {
-  const json = JSON.stringify(fics, null, 2);
-  const blob = new Blob([json], {type: 'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = 'index.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Downloaded! Upload this file to your GitHub repo at fics/index.json');
-}
-
-// ── EDITOR HELPERS ────────────────────────────────────────────────────────────
-function wrapText(before, after) {
-  const ta = document.getElementById('body-field');
-  const start = ta.selectionStart, end = ta.selectionEnd;
-  const selected = ta.value.substring(start, end);
-  ta.value = ta.value.substring(0, start) + before + selected + after + ta.value.substring(end);
-  ta.focus();
-  ta.setSelectionRange(start + before.length, end + before.length);
-}
-
-function insertText(text) {
-  const ta = document.getElementById('body-field');
-  const pos = ta.selectionStart;
-  ta.value = ta.value.substring(0, pos) + text + ta.value.substring(pos);
-  ta.focus();
-  ta.setSelectionRange(pos + text.length, pos + text.length);
-}
-
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3500);
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function formatDate(d) {
+  try {
+    return new Date(d).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+  } catch { return d; }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-loadFromStorage();
+loadFics();
 </script>
 </body>
 </html>
