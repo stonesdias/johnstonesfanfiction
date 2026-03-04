@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Between the Lines</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Crimson+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --crimson: #8B1A1A;
+      --crimson-dark: #5C0E0E;
+      --gold: #C9A84C;
+      --gold-pale: #E8D5A3;
+      --cream: #FAF6EF;
+      --parchment: #F2EBD9;
+      --ink: #1A1008;
+      --ink-light: #3D2B1F;
+      --muted: #7A6A5A;
+      --border: #D4C4A0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3D0A0A 0%, #8B1A1A 60%, #5C0E0E 100%);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--gold);
+    }
+    .admin-brand {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-pale);
+      font-size: 1.2rem;
+    }
+    .admin-brand span { font-style: italic; color: var(--gold); }
+    .back-link {
+      font-size: 0.8rem;
+      color: rgba(232,213,163,0.6);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .back-link:hover { color: var(--gold-pale); }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .sidebar-section {
+      padding: 0.4rem 1.2rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+    .sidebar-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      color: var(--ink-light);
+      transition: background 0.15s;
+    }
+    .sidebar-btn:hover { background: var(--parchment); }
+    .sidebar-btn.active {
+      background: rgba(139,26,26,0.08);
+      color: var(--crimson);
+      border-left: 3px solid var(--crimson);
+    }
+
+    /* Main area */
+    .main-area {
+      padding: 2rem 2.5rem;
+      max-width: 800px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .panel-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    /* Form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    input[type=text], input[type=number], input[type=date], select, textarea {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: #fff;
+      color: var(--ink);
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--crimson);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+    #body-field { min-height: 340px; font-size: 1rem; }
+
+    .help-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Toolbar */
+    .editor-toolbar {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.4rem;
+    }
+    .tb-btn {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--border);
+      background: var(--parchment);
+      cursor: pointer;
+      border-radius: 2px;
+      color: var(--ink-light);
+      transition: background 0.1s;
+    }
+    .tb-btn:hover { background: var(--border); }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      align-items: center;
+    }
+    .btn-primary {
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.8rem;
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--crimson-dark); }
+    .btn-secondary {
+      background: none;
+      color: var(--crimson);
+      border: 1px solid var(--crimson);
+      padding: 0.65rem 1.4rem;
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: rgba(139,26,26,0.07); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #2a6e2a;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      border-radius: 4px;
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; }
+
+    /* Fic list in admin */
+    .admin-fic-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .admin-fic-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--crimson);
+    }
+    .admin-fic-meta { font-size: 0.85rem; color: var(--muted); }
+    .btn-edit {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--crimson);
+      color: var(--crimson);
+      background: none;
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-edit:hover { background: rgba(139,26,26,0.07); }
+    .btn-delete {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid #c0392b;
+      color: #c0392b;
+      background: none;
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-delete:hover { background: rgba(192,57,43,0.07); }
+
+    .empty-admin {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Instructions panel */
+    .instruction-block {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+      border-radius: 0 3px 3px 0;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--ink-light);
+    }
+    .instruction-block code {
+      background: rgba(0,0,0,0.07);
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+      font-size: 0.85em;
+    }
+
+    @media (max-width: 700px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .sidebar { display: flex; flex-wrap: wrap; padding: 0.5rem; border-right: none; border-bottom: 1px solid var(--border); }
+      .sidebar-section { display: none; }
+      .sidebar-btn { width: auto; padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .main-area { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="admin-brand">Between <span>the Lines</span> — Admin</div>
+  <a href="/" class="back-link">← View site</a>
+</header>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">Works</div>
+    <button class="sidebar-btn active" onclick="showPanel('new-fic', this)">＋ New Fic</button>
+    <button class="sidebar-btn" onclick="showPanel('manage', this)">All Works</button>
+    <div class="sidebar-section">Help</div>
+    <button class="sidebar-btn" onclick="showPanel('guide', this)">Setup Guide</button>
+  </aside>
+
+  <main class="main-area">
+
+    <!-- NEW FIC PANEL -->
+    <div class="panel active" id="panel-new-fic">
+      <h2 id="form-heading">New Work</h2>
+      <p class="panel-sub" id="form-sub">Fill in the details below and hit Publish.</p>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Title *</label>
+          <input type="text" id="f-title" placeholder="e.g. Steadfast"/>
+        </div>
+        <div class="form-group">
+          <label>Pairing</label>
+          <input type="text" id="f-pairing" placeholder="e.g. John Stones/Rúben Dias"/>
+        </div>
+        <div class="form-group">
+          <label>Rating</label>
+          <select id="f-rating">
+            <option value="G">G – General</option>
+            <option value="T" selected>T – Teen</option>
+            <option value="M">M – Mature</option>
+            <option value="E">E – Explicit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Word Count</label>
+          <input type="number" id="f-wordcount" placeholder="e.g. 4800" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Chapters</label>
+          <input type="number" id="f-chapters" placeholder="1" min="1" value="1"/>
+        </div>
+        <div class="form-group">
+          <label>Series Name</label>
+          <input type="text" id="f-series" placeholder="Leave blank if standalone"/>
+        </div>
+        <div class="form-group">
+          <label>Date Posted</label>
+          <input type="date" id="f-date"/>
+        </div>
+        <div class="form-group full">
+          <label>Tags / Warnings <span class="help-text">(comma-separated)</span></label>
+          <input type="text" id="f-tags" placeholder="hurt/comfort, post-match, pining"/>
+        </div>
+        <div class="form-group full">
+          <label>Summary</label>
+          <textarea id="f-summary" placeholder="Write your summary here…" style="min-height:80px"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Body <span class="help-text">(markdown supported — **bold**, *italic*, --- for scene break)</span></label>
+          <div class="editor-toolbar">
+            <button class="tb-btn" onclick="wrapText('**','**')"><b>B</b></button>
+            <button class="tb-btn" onclick="wrapText('*','*')"><i>I</i></button>
+            <button class="tb-btn" onclick="insertText('\n\n---\n\n')">— scene break</button>
+            <button class="tb-btn" onclick="insertText('\n\n')">¶ paragraph</button>
+          </div>
+          <textarea id="body-field" placeholder="Paste or type your fic here…"></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveFic()">Publish</button>
+        <button class="btn-secondary" onclick="clearForm()">Clear</button>
+        <span id="save-status" style="color:var(--muted);font-size:0.9rem;"></span>
+      </div>
+    </div>
+
+    <!-- MANAGE PANEL -->
+    <div class="panel" id="panel-manage">
+      <h2>All Works</h2>
+      <p class="panel-sub">Click a fic to edit it, or delete it permanently.</p>
+      <div id="admin-fic-list"></div>
+    </div>
+
+    <!-- GUIDE PANEL -->
+    <div class="panel" id="panel-guide">
+      <h2>Setup Guide</h2>
+      <p class="panel-sub">How to get your site live on Netlify — no coding needed.</p>
+
+      <div class="instruction-block">
+        <strong>Step 1 — Upload files to GitHub</strong><br>
+        Go to <a href="https://github.com" target="_blank">github.com</a> → your repo → upload all these files keeping the same folder structure. Make sure <code>fics/index.json</code> exists (upload the one included in the package).
+      </div>
+      <div class="instruction-block">
+        <strong>Step 2 — Connect to Netlify</strong><br>
+        Go to <a href="https://netlify.com" target="_blank">netlify.com</a> → Add new site → Import from GitHub → select your repo → Deploy. Done. Your site is live.
+      </div>
+      <div class="instruction-block">
+        <strong>Step 3 — Using the admin panel</strong><br>
+        This admin panel saves fics to your browser. To publish them to your live site, click <strong>Export fics.json</strong> below, then upload that file to your GitHub repo at <code>fics/index.json</code>. Netlify auto-rebuilds within ~30 seconds.
+      </div>
+      <div class="instruction-block">
+        <strong>That's it!</strong> Your workflow is: write fic here → Publish → Export JSON → upload to GitHub → site updates. You only touch GitHub for that one file upload step.
+      </div>
+
+      <div class="btn-row" style="margin-top:2rem">
+        <button class="btn-primary" onclick="exportFics()">⬇ Export fics.json</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast">Saved!</div>
+
+<script>
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'btl_fics';
+let fics = [];
+let editingId = null;
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    fics = raw ? JSON.parse(raw) : [];
+  } catch { fics = []; }
+}
+
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(fics));
+}
+
+// ── PANELS ────────────────────────────────────────────────────────────────────
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'manage') renderAdminList();
+}
+
+// ── FORM ──────────────────────────────────────────────────────────────────────
+function setToday() {
+  const d = document.getElementById('f-date');
+  if (!d.value) d.value = new Date().toISOString().split('T')[0];
+}
+setToday();
+
+function clearForm() {
+  ['f-title','f-pairing','f-tags','f-summary','body-field','f-series','f-wordcount'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-rating').value = 'T';
+  document.getElementById('f-chapters').value = '1';
+  setToday();
+  editingId = null;
+  document.getElementById('form-heading').textContent = 'New Work';
+  document.getElementById('form-sub').textContent = 'Fill in the details below and hit Publish.';
+  document.getElementById('save-status').textContent = '';
+}
+
+function saveFic() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { alert('Please enter a title.'); return; }
+
+  const tagsRaw = document.getElementById('f-tags').value;
+  const tags = tagsRaw.split(',').map(t=>t.trim()).filter(Boolean);
+
+  const fic = {
+    id: editingId || ('fic-' + Date.now()),
+    title,
+    pairing:   document.getElementById('f-pairing').value.trim(),
+    rating:    document.getElementById('f-rating').value,
+    wordcount: parseInt(document.getElementById('f-wordcount').value)||0,
+    chapters:  parseInt(document.getElementById('f-chapters').value)||1,
+    series:    document.getElementById('f-series').value.trim(),
+    date:      document.getElementById('f-date').value,
+    tags,
+    summary:   document.getElementById('f-summary').value.trim(),
+    body:      document.getElementById('body-field').value
+  };
+
+  if (editingId) {
+    const idx = fics.findIndex(f => f.id === editingId);
+    if (idx > -1) fics[idx] = fic;
+  } else {
+    fics.unshift(fic);
+  }
+
+  saveToStorage();
+  toast('Saved! Remember to export and upload fics.json to publish.');
+  document.getElementById('save-status').textContent = '✓ Saved to browser';
+  clearForm();
+}
+
+// ── MANAGE ────────────────────────────────────────────────────────────────────
+function renderAdminList() {
+  const el = document.getElementById('admin-fic-list');
+  if (!fics.length) {
+    el.innerHTML = '<div class="empty-admin">No works yet. Add your first fic!</div>';
+    return;
+  }
+  el.innerHTML = fics.map(f => `
+    <div class="admin-fic-item">
+      <div>
+        <div class="admin-fic-title">${f.title}</div>
+        <div class="admin-fic-meta">${f.pairing||'Gen'} · ${f.rating} · ${(f.wordcount||0).toLocaleString()} words · ${f.date||''}</div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-shrink:0">
+        <button class="btn-edit" onclick="editFic('${f.id}')">Edit</button>
+        <button class="btn-delete" onclick="deleteFic('${f.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editFic(id) {
+  const f = fics.find(x => x.id === id);
+  if (!f) return;
+  editingId = id;
+  document.getElementById('f-title').value     = f.title||'';
+  document.getElementById('f-pairing').value   = f.pairing||'';
+  document.getElementById('f-rating').value    = f.rating||'T';
+  document.getElementById('f-wordcount').value = f.wordcount||'';
+  document.getElementById('f-chapters').value  = f.chapters||1;
+  document.getElementById('f-series').value    = f.series||'';
+  document.getElementById('f-date').value      = f.date||'';
+  document.getElementById('f-tags').value      = (f.tags||[]).join(', ');
+  document.getElementById('f-summary').value   = f.summary||'';
+  document.getElementById('body-field').value  = f.body||'';
+  document.getElementById('form-heading').textContent = 'Edit: ' + f.title;
+  document.getElementById('form-sub').textContent = 'Make changes and hit Publish to update.';
+  showPanel('new-fic', document.querySelector('.sidebar-btn'));
+  window.scrollTo(0,0);
+}
+
+function deleteFic(id) {
+  const f = fics.find(x => x.id === id);
+  if (!f) return;
+  if (!confirm(`Delete "${f.title}"? This cannot be undone.`)) return;
+  fics = fics.filter(x => x.id !== id);
+  saveToStorage();
+  renderAdminList();
+  toast('Deleted.');
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function exportFics() {
+  const json = JSON.stringify(fics, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'index.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Downloaded! Upload this file to your GitHub repo at fics/index.json');
+}
+
+// ── EDITOR HELPERS ────────────────────────────────────────────────────────────
+function wrapText(before, after) {
+  const ta = document.getElementById('body-field');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + before + selected + after + ta.value.substring(end);
+  ta.focus();
+  ta.setSelectionRange(start + before.length, end + before.length);
+}
+
+function insertText(text) {
+  const ta = document.getElementById('body-field');
+  const pos = ta.selectionStart;
+  ta.value = ta.value.substring(0, pos) + text + ta.value.substring(pos);
+  ta.focus();
+  ta.setSelectionRange(pos + text.length, pos + text.length);
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadFromStorage();
+</script>
+</body>
+</html>
