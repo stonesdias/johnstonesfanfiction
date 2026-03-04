@@ -115,8 +115,7 @@
 <div id="header">
   <div class="inner">
     <h1><a href="#" onclick="showHome(); return false;">John Stones Fanfiction Archive</a></h1>
-    <div class="tagline">an archive for all my John Stones fanfiction and all his ships :)</div>
-  </div>
+<div class="tagline">an archive for all my John Stones fanfiction and all his ships :)<br/>by huijsen</div>  </div>
 </div>
 
 <div id="main-nav">
@@ -154,7 +153,7 @@
     </div>
     <div class="sidebar-module">
       <h3>About</h3>
-      <p>A personal fanfiction archive dedicated to John Stones. All works are RPF. Check individual fic headers for content warnings.</p>
+      <p>Decided to create my own John Stones fanfiction archive in case anything happens to AO3. Works will continue to be uploaded. Just a little archive for all my fics <3</p>
     </div>
   </div>
 
@@ -206,7 +205,7 @@
 </div>
 
 <div id="footer">
-  johnstonesfanfiction &nbsp;·&nbsp; RPF &nbsp;·&nbsp; not for profit
+  DISCLAIMER this is a personal site. not for profit. tumblr.com/huijsen for more
 </div>
 
 <script>
@@ -327,7 +326,7 @@ function renderList() {
     return `
       <div class="work-blurb">
         <h4><a href="#" onclick="openFic('${f.id}');return false;">${f.title}</a></h4>
-        <div class="byline">by <a href="#">the archive</a>${f.date ? ' · '+formatDate(f.date) : ''}</div>
+        <div class="byline">by <a href="#">moonwedes</a>${f.date ? ' · '+formatDate(f.date) : ''}</div>
         ${series}
         <div class="required-tags">
           <span class="rating-tag rating-${f.rating||'NR'}">${RATING_LABEL[f.rating]||'Not Rated'}</span>
