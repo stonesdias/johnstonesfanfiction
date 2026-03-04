@@ -4,53 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>johnstonesfanfiction</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --red: #900; --red-dark: #600; --bg: #f7f7f7; --white: #fff; --border: #ccc; --border-light: #e0e0e0; --text: #2a2a2a; --text-muted: #666; --link: #900; }
+    :root {
+      --red: #900; --red-dark: #600; --bg: #f7f7f7; --white: #fff;
+      --border: #ccc; --border-light: #e0e0e0; --text: #2a2a2a;
+      --text-muted: #666; --link: #900;
+    }
     body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
-    a { color: var(--link); text-decoration: none; } a:hover { color: #c00; text-decoration: underline; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: #c00; text-decoration: underline; }
+
+    /* HEADER */
     #header { background: var(--red); color: #fff; }
     #header .inner { max-width: 1000px; margin: 0 auto; padding: 8px 16px; }
     #header h1 a { color: #fff; font-size: 22px; font-family: Georgia, serif; font-weight: bold; }
     #header h1 a:hover { text-decoration: none; color: #fdd; }
     #header .tagline { font-size: 11px; color: #fcc; font-style: italic; margin-top: 2px; }
+
+    /* NAV */
     #main-nav { background: #c00; border-bottom: 1px solid var(--red-dark); }
     #main-nav .inner { max-width: 1000px; margin: 0 auto; display: flex; padding: 0 16px; }
     #main-nav a { color: #fff; font-size: 13px; padding: 7px 12px; display: block; font-family: Arial, sans-serif; }
     #main-nav a:hover { background: var(--red-dark); text-decoration: none; }
+
+    /* SEARCH */
     #search-bar { background: #e8e8e8; border-bottom: 1px solid var(--border); padding: 6px 16px; }
     #search-bar .inner { max-width: 1000px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
     #search-bar input { flex: 1; max-width: 400px; padding: 4px 8px; border: 1px solid var(--border); font-size: 13px; font-family: Arial, sans-serif; border-radius: 2px; }
     #search-bar button { padding: 4px 12px; background: var(--red); color: #fff; border: none; font-size: 13px; cursor: pointer; border-radius: 2px; font-family: Arial, sans-serif; }
     #search-bar button:hover { background: var(--red-dark); }
+
+    /* LAYOUT */
     #main { max-width: 1000px; margin: 0 auto; display: flex; gap: 16px; padding: 16px; }
     #sidebar { width: 220px; flex-shrink: 0; }
+
+    /* SIDEBAR */
     .sidebar-module { background: var(--white); border: 1px solid var(--border); margin-bottom: 12px; }
     .sidebar-module h3 { background: var(--red); color: #fff; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold; padding: 5px 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     .sidebar-module ul { list-style: none; padding: 8px 10px; }
-    .sidebar-module ul li { font-size: 12px; font-family: Arial, sans-serif; padding: 2px 0; border-bottom: 1px solid var(--border-light); }
+    .sidebar-module ul li { font-size: 12px; font-family: Arial, sans-serif; padding: 2px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
     .sidebar-module ul li:last-child { border-bottom: none; }
-    .sidebar-module .count { color: var(--text-muted); font-size: 11px; float: right; }
+    .sidebar-module ul li a { color: var(--link); }
+    .sidebar-module .count { color: var(--text-muted); font-size: 11px; }
     .sidebar-module p { font-size: 12px; font-family: Arial, sans-serif; padding: 8px 10px; color: var(--text-muted); line-height: 1.4; }
+
+    /* CONTENT */
     #content { flex: 1; min-width: 0; }
     .works-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; }
     .works-header h2 { font-size: 16px; font-family: Arial, sans-serif; }
     .works-header .count { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; }
+
+    /* FILTER BAR */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; font-family: Arial, sans-serif; font-size: 12px; color: var(--text-muted); }
+    .filter-bar select { font-size: 12px; font-family: Arial, sans-serif; padding: 3px 6px; border: 1px solid var(--border); border-radius: 2px; }
+
+    /* WORK BLURB */
     .work-blurb { background: var(--white); border: 1px solid var(--border); margin-bottom: 12px; padding: 12px 14px; }
     .work-blurb h4 { font-size: 15px; margin-bottom: 4px; }
-    .work-blurb h4 a { color: var(--link); font-family: Georgia, serif; }
+    .work-blurb h4 a { color: var(--link); font-family: Georgia, serif; cursor: pointer; }
     .work-blurb .byline { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; margin-bottom: 6px; }
     .work-blurb .required-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
     .rating-tag, .category-tag, .warning-tag, .complete-tag, .wip-tag { font-size: 11px; font-family: Arial, sans-serif; padding: 1px 6px; border-radius: 2px; border: 1px solid; white-space: nowrap; }
-    .rating-e { background: #ffe4e4; border-color: #c00; color: #900; }
-    .rating-m { background: #ffe4b5; border-color: #cc7700; color: #774400; }
-    .rating-t { background: #e4ffe4; border-color: #009900; color: #005500; }
-    .rating-g { background: #e4eeff; border-color: #0055cc; color: #003388; }
-    .rating-nr { background: #f0f0f0; border-color: #999; color: #555; }
-    .warning-tag { background: #fff0f0; border-color: #c66; color: #900; }
+    .rating-E  { background: #ffe4e4; border-color: #c00; color: #900; }
+    .rating-M  { background: #ffe4b5; border-color: #cc7700; color: #774400; }
+    .rating-T  { background: #e4ffe4; border-color: #009900; color: #005500; }
+    .rating-G  { background: #e4eeff; border-color: #0055cc; color: #003388; }
+    .rating-NR { background: #f0f0f0; border-color: #999; color: #555; }
+    .warning-tag  { background: #fff0f0; border-color: #c66; color: #900; }
     .category-tag { background: #f0f0ff; border-color: #66c; color: #339; }
     .complete-tag { background: #f0fff0; border-color: #6c6; color: #363; }
-    .wip-tag { background: #fffde4; border-color: #cc9; color: #665500; }
+    .wip-tag      { background: #fffde4; border-color: #cc9; color: #665500; }
     .work-blurb .fandoms { font-size: 12px; font-family: Arial, sans-serif; margin-bottom: 4px; color: var(--text-muted); }
     .work-blurb .fandoms a { color: var(--red); font-weight: bold; }
     .work-blurb .tags-list { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
@@ -58,11 +83,15 @@
     .tag-ship { background: #fde8e8; border-color: #e0aaaa; color: #700; }
     .tag-char { background: #e8f0fd; border-color: #aabde0; color: #004; }
     .tag-free { background: #e8fde8; border-color: #aae0aa; color: #040; }
-    .work-blurb .summary { font-size: 13px; font-family: Georgia, serif; margin-bottom: 8px; line-height: 1.5; border-left: 3px solid var(--border); padding-left: 8px; }
+    .work-blurb .summary { font-size: 13px; font-family: Georgia, serif; margin-bottom: 8px; line-height: 1.5; border-left: 3px solid var(--border); padding-left: 8px; color: var(--text-muted); }
     .work-blurb .stats { font-size: 11px; font-family: Arial, sans-serif; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border-light); padding-top: 6px; margin-top: 4px; }
     .stat-label { color: #999; }
+    .series-line { font-size: 11px; font-family: Arial, sans-serif; color: #777; margin-bottom: 5px; font-style: italic; }
+
+    /* EMPTY */
     .empty-state { background: var(--white); border: 1px solid var(--border); padding: 40px; text-align: center; color: var(--text-muted); font-family: Arial, sans-serif; font-size: 13px; }
-    .empty-state p { margin-bottom: 8px; }
+
+    /* FIC READER */
     #fic-page { display: none; }
     #fic-page .work-meta { background: var(--white); border: 1px solid var(--border); padding: 14px; margin-bottom: 16px; }
     #fic-page .work-meta h2 { font-size: 20px; font-family: Georgia, serif; margin-bottom: 8px; }
@@ -71,40 +100,16 @@
     #fic-page .chapter-text { background: var(--white); border: 1px solid var(--border); padding: 20px 24px; font-size: 14px; font-family: Georgia, serif; line-height: 1.8; }
     #fic-page .chapter-text p { margin-bottom: 1em; }
     #fic-page .chapter-text em { font-style: italic; }
+    #fic-page .chapter-text hr { border: none; border-top: 1px solid var(--border); margin: 1.5em auto; width: 40%; }
     .back-link { font-size: 12px; font-family: Arial, sans-serif; margin-bottom: 12px; display: block; }
+
+    /* FOOTER */
     #footer { background: var(--red); color: #fcc; text-align: center; font-size: 11px; font-family: Arial, sans-serif; padding: 10px; margin-top: 24px; }
+
     @media (max-width: 700px) { #main { flex-direction: column; } #sidebar { width: 100%; } }
   </style>
 </head>
 <body>
-
-<!--
-=================================================================
-  JOHNSTONESFANFICTION — BLANK TEMPLATE
-=================================================================
-
-  HOW TO ADD A FIC (3 steps):
-
-  STEP 1 — Find the section that says "PASTE YOUR FIC CARD HERE"
-           and paste in a copy of the FIC CARD TEMPLATE below.
-           Fill in your fic's title, rating, tags, summary, etc.
-
-  STEP 2 — Find the section that says "PASTE YOUR FIC TEXT HERE"
-           and paste in a copy of the FIC TEXT TEMPLATE below.
-           Fill in your fic's full text.
-
-  STEP 3 — Make sure the ID in both places matches.
-           e.g. if your card says onclick="showFic('fic1')"
-           then your text entry must start with   fic1: {
-
-  HOW TO REMOVE A FIC:
-  Delete the whole fic card block and its matching text entry.
-
-  HOW TO UPDATE SIDEBAR COUNTS:
-  Find the <span class="count">0</span> bits in the sidebar
-  and change the number.
-=================================================================
--->
 
 <div id="header">
   <div class="inner">
@@ -116,49 +121,35 @@
 <div id="main-nav">
   <div class="inner">
     <a href="#" onclick="showHome(); return false;">Works</a>
-    <a href="#">About</a>
-    <a href="#">Tags</a>
+    <a href="#about">About</a>
   </div>
 </div>
 
 <div id="search-bar">
   <div class="inner">
-    <input type="text" placeholder="Search works..." />
-    <button>Search</button>
+    <input type="text" id="search-input" placeholder="Search works..." oninput="applyFilters()" />
+    <button onclick="applyFilters()">Search</button>
   </div>
 </div>
 
 <div id="main">
-
   <div id="sidebar">
     <div class="sidebar-module">
       <h3>Browse by Pairing</h3>
-      <ul>
-        <!-- Change the 0s as you add fics -->
-        <li><a href="#">John Stones/Rúben Dias</a> <span class="count">0</span></li>
-        <li><a href="#">John Stones/Jordan Pickford</a> <span class="count">0</span></li>
-        <li><a href="#">Other/Ensemble</a> <span class="count">0</span></li>
-      </ul>
+      <ul id="sidebar-pairings"><li><span style="color:#aaa;font-style:italic">No works yet</span></li></ul>
     </div>
     <div class="sidebar-module">
       <h3>Browse by Rating</h3>
-      <ul>
-        <li><a href="#">Explicit</a> <span class="count">0</span></li>
-        <li><a href="#">Mature</a> <span class="count">0</span></li>
-        <li><a href="#">Teen &amp; Up</a> <span class="count">0</span></li>
-        <li><a href="#">General</a> <span class="count">0</span></li>
+      <ul id="sidebar-ratings">
+        <li><a href="#" onclick="filterBy('rating','E');return false;">Explicit</a> <span class="count" id="count-E">0</span></li>
+        <li><a href="#" onclick="filterBy('rating','M');return false;">Mature</a> <span class="count" id="count-M">0</span></li>
+        <li><a href="#" onclick="filterBy('rating','T');return false;">Teen &amp; Up</a> <span class="count" id="count-T">0</span></li>
+        <li><a href="#" onclick="filterBy('rating','G');return false;">General</a> <span class="count" id="count-G">0</span></li>
       </ul>
     </div>
     <div class="sidebar-module">
       <h3>Browse by Tag</h3>
-      <ul>
-        <!-- Add/remove tags here as you like -->
-        <li><a href="#">hurt/comfort</a> <span class="count">0</span></li>
-        <li><a href="#">angst</a> <span class="count">0</span></li>
-        <li><a href="#">fluff</a> <span class="count">0</span></li>
-        <li><a href="#">omegaverse</a> <span class="count">0</span></li>
-        <li><a href="#">whump</a> <span class="count">0</span></li>
-      </ul>
+      <ul id="sidebar-tags"><li><span style="color:#aaa;font-style:italic">No works yet</span></li></ul>
     </div>
     <div class="sidebar-module">
       <h3>About</h3>
@@ -167,45 +158,49 @@
   </div>
 
   <div id="content">
-
     <div id="home-page">
       <div class="works-header">
         <h2>All Works</h2>
-        <!-- Update this number as you add fics -->
-        <span class="count">0 works</span>
+        <span class="count" id="works-count">0 works</span>
       </div>
-
-      <!-- =======================================================
-           PASTE YOUR FIC CARDS HERE
-           (copy the template from the bottom of this file)
-           ======================================================= -->
-
-
-      <!-- =======================================================
-           END OF FIC CARDS
-           ======================================================= -->
-
-      <!-- Delete this block once you have at least one fic posted -->
-      <div class="empty-state">
-        <p>✍️ No works posted yet.</p>
-        <p>Follow the instructions in the file to add your first fic!</p>
+      <div class="filter-bar">
+        Filter:
+        <select id="filter-rating" onchange="applyFilters()">
+          <option value="">All ratings</option>
+          <option value="E">Explicit</option>
+          <option value="M">Mature</option>
+          <option value="T">Teen &amp; Up</option>
+          <option value="G">General</option>
+        </select>
+        <select id="filter-pairing" onchange="applyFilters()">
+          <option value="">All pairings</option>
+        </select>
+        <select id="filter-status" onchange="applyFilters()">
+          <option value="">Any status</option>
+          <option value="Complete">Complete</option>
+          <option value="WIP">WIP</option>
+        </select>
+        <a href="#" onclick="clearFilters(); return false;" style="font-size:11px;">clear</a>
       </div>
-
+      <div id="fic-list"></div>
     </div>
 
-    <!-- Reading page — don't edit this -->
     <div id="fic-page">
       <a href="#" class="back-link" onclick="showHome(); return false;">← Back to Works</a>
       <div class="work-meta">
-        <h2 id="fic-title"></h2>
-        <div id="fic-badge-row" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;"></div>
-        <div id="fic-tag-row" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
-        <div class="meta-row"><strong>Summary: </strong><span id="fic-summary"></span></div>
-        <div class="meta-row" style="margin-top:6px;"><strong>Words: </strong><span id="fic-words"></span> &nbsp;·&nbsp; <strong>Chapters: </strong><span id="fic-chapters"></span> &nbsp;·&nbsp; <strong>Status: </strong><span id="fic-status"></span></div>
+        <h2 id="reader-title"></h2>
+        <div id="reader-badges" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;"></div>
+        <div id="reader-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
+        <div class="meta-row"><strong>Summary: </strong><span id="reader-summary"></span></div>
+        <div class="meta-row" style="margin-top:6px;">
+          <strong>Words: </strong><span id="reader-words"></span> &nbsp;·&nbsp;
+          <strong>Chapters: </strong><span id="reader-chapters"></span> &nbsp;·&nbsp;
+          <strong>Posted: </strong><span id="reader-date"></span>
+        </div>
+        <div class="meta-row" id="reader-series-line" style="margin-top:4px;display:none;"></div>
       </div>
-      <div class="chapter-text" id="fic-body"></div>
+      <div class="chapter-text" id="reader-body"></div>
     </div>
-
   </div>
 </div>
 
@@ -213,135 +208,186 @@
   johnstonesfanfiction &nbsp;·&nbsp; RPF &nbsp;·&nbsp; not for profit
 </div>
 
-
 <script>
-// =================================================================
-//  PASTE YOUR FIC TEXT ENTRIES HERE
-//  (copy the template from the bottom of this file)
-// =================================================================
+// ── DATA ──────────────────────────────────────────────────────────────────────
+let ALL_FICS = [];
+let FILTERED = [];
 
-const fics = {
+const RATING_LABEL = { E: 'Explicit', M: 'Mature', T: 'Teen & Up', G: 'General', NR: 'Not Rated' };
 
-  // your fics go here
-
-
-};
-
-// =================================================================
-//  DON'T EDIT ANYTHING BELOW THIS LINE
-// =================================================================
-function showFic(id) {
-  const f = fics[id];
-  if (!f) return;
-  document.getElementById('fic-title').textContent = f.title;
-  document.getElementById('fic-summary').textContent = f.summary;
-  document.getElementById('fic-words').textContent = f.words;
-  document.getElementById('fic-chapters').textContent = f.chapters;
-  document.getElementById('fic-status').textContent = f.status;
-  document.getElementById('fic-body').innerHTML = f.body;
-  document.getElementById('fic-badge-row').innerHTML =
-    `<span class="rating-tag ${f.ratingClass}">${f.rating}</span>
-     <span class="category-tag">${f.category}</span>
-     <span class="warning-tag">${f.warning}</span>
-     <span class="${f.statusClass}">${f.status}</span>`;
-  const ships = f.pairing.split(',').map(t => `<span class="tag tag-ship">${t.trim()}</span>`).join('');
-  const chars = f.characters.split(',').map(t => `<span class="tag tag-char">${t.trim()}</span>`).join('');
-  const free  = f.freeTags.split(',').map(t => `<span class="tag tag-free">${t.trim()}</span>`).join('');
-  document.getElementById('fic-tag-row').innerHTML = ships + chars + free;
-  document.getElementById('home-page').style.display = 'none';
-  document.getElementById('fic-page').style.display = 'block';
-  window.scrollTo(0, 0);
+async function loadFics() {
+  try {
+    const r = await fetch('/fics/index.json?v=' + Date.now());
+    if (r.ok) ALL_FICS = await r.json();
+  } catch {}
+  ALL_FICS.sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+  buildSidebar();
+  buildPairingFilter();
+  applyFilters();
 }
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+function buildSidebar() {
+  // Pairings
+  const pairingMap = {};
+  ALL_FICS.forEach(f => {
+    const p = f.pairing || 'Gen';
+    pairingMap[p] = (pairingMap[p]||0) + 1;
+  });
+  const pEl = document.getElementById('sidebar-pairings');
+  pEl.innerHTML = Object.entries(pairingMap).sort((a,b)=>b[1]-a[1]).map(([p,c])=>
+    `<li><a href="#" onclick="filterBy('pairing','${p.replace(/'/g,"\\'")}');return false;">${p}</a><span class="count">${c}</span></li>`
+  ).join('') || '<li><span style="color:#aaa;font-style:italic">No works yet</span></li>';
+
+  // Ratings
+  ['E','M','T','G'].forEach(r => {
+    const el = document.getElementById('count-'+r);
+    if (el) el.textContent = ALL_FICS.filter(f=>f.rating===r).length;
+  });
+
+  // Tags
+  const tagMap = {};
+  ALL_FICS.forEach(f => (f.tags||[]).forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
+  const tEl = document.getElementById('sidebar-tags');
+  tEl.innerHTML = Object.entries(tagMap).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([t,c])=>
+    `<li><a href="#" onclick="filterByTag('${t.replace(/'/g,"\\'")}');return false;">${t}</a><span class="count">${c}</span></li>`
+  ).join('') || '<li><span style="color:#aaa;font-style:italic">No works yet</span></li>';
+}
+
+function buildPairingFilter() {
+  const sel = document.getElementById('filter-pairing');
+  const pairings = [...new Set(ALL_FICS.map(f=>f.pairing).filter(Boolean))].sort();
+  pairings.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    sel.appendChild(o);
+  });
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function applyFilters() {
+  const rating  = document.getElementById('filter-rating').value;
+  const pairing = document.getElementById('filter-pairing').value;
+  const status  = document.getElementById('filter-status').value;
+  const search  = document.getElementById('search-input').value.toLowerCase();
+
+  FILTERED = ALL_FICS.filter(f => {
+    if (rating  && f.rating !== rating) return false;
+    if (pairing && f.pairing !== pairing) return false;
+    if (status  && f.status !== status) return false;
+    if (search) {
+      const hay = [f.title, f.summary, f.pairing, ...(f.tags||[])].join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  renderList();
+}
+
+function filterBy(field, value) {
+  if (field === 'rating') document.getElementById('filter-rating').value = value;
+  if (field === 'pairing') document.getElementById('filter-pairing').value = value;
+  applyFilters();
+  showHome();
+}
+
+function filterByTag(tag) {
+  document.getElementById('search-input').value = tag;
+  applyFilters();
+  showHome();
+}
+
+function clearFilters() {
+  document.getElementById('filter-rating').value = '';
+  document.getElementById('filter-pairing').value = '';
+  document.getElementById('filter-status').value = '';
+  document.getElementById('search-input').value = '';
+  applyFilters();
+}
+
+// ── RENDER LIST ───────────────────────────────────────────────────────────────
+function renderList() {
+  const el = document.getElementById('fic-list');
+  document.getElementById('works-count').textContent = `${FILTERED.length} work${FILTERED.length!==1?'s':''}`;
+
+  if (!FILTERED.length) {
+    el.innerHTML = `<div class="empty-state"><p>${ALL_FICS.length ? 'No works match your filters.' : '✍️ No works posted yet. Add your first fic via the admin panel.'}</p></div>`;
+    return;
+  }
+
+  el.innerHTML = FILTERED.map(f => {
+    const tags = (f.tags||[]).map(t=>`<span class="tag tag-free">${t}</span>`).join('');
+    const chars = (f.characters||[]).map(c=>`<span class="tag tag-char">${c}</span>`).join('');
+    const statusTag = f.status==='Complete'
+      ? `<span class="complete-tag">Complete</span>`
+      : `<span class="wip-tag">Work in Progress</span>`;
+    const series = f.series ? `<div class="series-line">Part of series: <em>${f.series}</em></div>` : '';
+    return `
+      <div class="work-blurb">
+        <h4><a href="#" onclick="openFic('${f.id}');return false;">${f.title}</a></h4>
+        <div class="byline">by <a href="#">the archive</a>${f.date ? ' · '+formatDate(f.date) : ''}</div>
+        ${series}
+        <div class="required-tags">
+          <span class="rating-tag rating-${f.rating||'NR'}">${RATING_LABEL[f.rating]||'Not Rated'}</span>
+          <span class="category-tag">${f.category||'M/M'}</span>
+          <span class="warning-tag">${f.warning||'Choose Not To Warn'}</span>
+          ${statusTag}
+        </div>
+        <div class="fandoms"><a href="#">Football RPF</a> › <a href="#">Manchester City RPF</a></div>
+        <div class="tags-list">
+          <span class="tag tag-ship">${f.pairing||'Gen'}</span>
+          ${chars}${tags}
+        </div>
+        <div class="summary">${f.summary||''}</div>
+        <div class="stats">
+          <span><span class="stat-label">Words: </span>${(f.wordcount||0).toLocaleString()}</span>
+          <span><span class="stat-label">Chapters: </span>${f.chapters||1}/${f.status==='Complete'?f.chapters||1:'?'}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── READER ────────────────────────────────────────────────────────────────────
+function openFic(id) {
+  const f = ALL_FICS.find(x=>x.id===id);
+  if (!f) return;
+  document.getElementById('reader-title').textContent = f.title;
+  const statusTag = f.status==='Complete' ? `<span class="complete-tag">Complete</span>` : `<span class="wip-tag">Work in Progress</span>`;
+  document.getElementById('reader-badges').innerHTML = `
+    <span class="rating-tag rating-${f.rating||'NR'}">${RATING_LABEL[f.rating]||'Not Rated'}</span>
+    <span class="category-tag">${f.category||'M/M'}</span>
+    <span class="warning-tag">${f.warning||'Choose Not To Warn'}</span>
+    ${statusTag}`;
+  const tags = (f.tags||[]).map(t=>`<span class="tag tag-free">${t}</span>`).join('');
+  const chars = (f.characters||[]).map(c=>`<span class="tag tag-char">${c}</span>`).join('');
+  document.getElementById('reader-tags').innerHTML =
+    `<span class="tag tag-ship">${f.pairing||'Gen'}</span>${chars}${tags}`;
+  document.getElementById('reader-summary').textContent = f.summary||'';
+  document.getElementById('reader-words').textContent = (f.wordcount||0).toLocaleString();
+  document.getElementById('reader-chapters').textContent = `${f.chapters||1}/${f.status==='Complete'?f.chapters||1:'?'}`;
+  document.getElementById('reader-date').textContent = f.date ? formatDate(f.date) : '—';
+  const sl = document.getElementById('reader-series-line');
+  if (f.series) { sl.style.display='block'; sl.innerHTML=`<strong>Series:</strong> <em>${f.series}</em>`; }
+  else sl.style.display='none';
+  document.getElementById('reader-body').innerHTML =
+    typeof marked !== 'undefined' ? marked.parse(f.body||'') : (f.body||'').replace(/\n\n/g,'</p><p>').replace(/^/,'<p>').replace(/$/,'</p>');
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('fic-page').style.display  = 'block';
+  window.scrollTo(0,0);
+}
+
 function showHome() {
   document.getElementById('home-page').style.display = 'block';
-  document.getElementById('fic-page').style.display = 'none';
-  window.scrollTo(0, 0);
+  document.getElementById('fic-page').style.display  = 'none';
+  window.scrollTo(0,0);
 }
+
+function formatDate(d) {
+  try { return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); } catch { return d; }
+}
+
+loadFics();
 </script>
-
-
-<!--
-=================================================================
-  TEMPLATES — COPY THESE WHEN ADDING A NEW FIC
-=================================================================
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  FIC CARD TEMPLATE
-  Paste this into the "PASTE YOUR FIC CARDS HERE" section above.
-  Replace fic1 with fic2, fic3 etc. for each new fic.
-
-  RATING OPTIONS:
-    <span class="rating-tag rating-g">General</span>
-    <span class="rating-tag rating-t">Teen &amp; Up</span>
-    <span class="rating-tag rating-m">Mature</span>
-    <span class="rating-tag rating-e">Explicit</span>
-    <span class="rating-tag rating-nr">Not Rated</span>
-
-  STATUS OPTIONS:
-    <span class="complete-tag">Complete</span>
-    <span class="wip-tag">Work in Progress</span>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-<div class="work-blurb">
-  <h4><a href="#" onclick="showFic('fic1'); return false;">YOUR FIC TITLE</a></h4>
-  <div class="byline">by <a href="#">your name</a></div>
-  <div class="required-tags">
-    <span class="rating-tag rating-m">Mature</span>
-    <span class="category-tag">M/M</span>
-    <span class="warning-tag">Choose Not To Warn</span>
-    <span class="complete-tag">Complete</span>
-  </div>
-  <div class="fandoms"><a href="#">Football RPF</a> › <a href="#">Manchester City RPF</a></div>
-  <div class="tags-list">
-    <span class="tag tag-ship">John Stones/Rúben Dias</span>
-    <span class="tag tag-char">John Stones</span>
-    <span class="tag tag-char">Rúben Dias</span>
-    <span class="tag tag-free">hurt/comfort</span>
-    <span class="tag tag-free">add more tags here</span>
-  </div>
-  <div class="summary">Your summary here.</div>
-  <div class="stats">
-    <span><span class="stat-label">Words: </span>0,000</span>
-    <span><span class="stat-label">Chapters: </span>1/1</span>
-  </div>
-</div>
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  FIC TEXT TEMPLATE
-  Paste this into the fics = { } section in the JavaScript.
-  Make sure the id (fic1) matches the card above.
-
-  ratingClass options:  rating-g / rating-t / rating-m / rating-e / rating-nr
-  statusClass options:  complete-tag  /  wip-tag
-
-  In the body, wrap each paragraph in <p>...</p>
-  For italics: <em>your italic text</em>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  fic1: {
-    title: "YOUR FIC TITLE",
-    rating: "Mature",
-    ratingClass: "rating-m",
-    category: "M/M",
-    warning: "Choose Not To Warn",
-    status: "Complete",
-    statusClass: "complete-tag",
-    pairing: "John Stones/Rúben Dias",
-    characters: "John Stones, Rúben Dias",
-    freeTags: "hurt/comfort, slow burn, angst",
-    summary: "Your summary here.",
-    words: "0,000",
-    chapters: "1/1",
-    body: `
-      <p>First paragraph of your fic.</p>
-      <p>Second paragraph. Use <em>italics</em> like this.</p>
-      <p>Keep adding paragraphs...</p>
-    `
-  },
-
-=================================================================
--->
-
 </body>
 </html>
