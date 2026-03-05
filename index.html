@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Source+Sans+3:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>John Stones Fanfiction Archive</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
@@ -27,14 +26,14 @@
     /* NAV */
     #main-nav { background: #c00; border-bottom: 1px solid var(--red-dark); }
     #main-nav .inner { max-width: 1000px; margin: 0 auto; display: flex; padding: 0 16px; }
-    #main-nav a { color: #fff; font-size: 13px; padding: 7px 12px; display: block; font-family: Arial, sans-serif; }
+    #main-nav a { color: #fff; font-size: 13px; padding: 7px 12px; display: block; font-family: Inter, sans-serif; }
     #main-nav a:hover { background: var(--red-dark); text-decoration: none; }
 
     /* SEARCH */
     #search-bar { background: #e8e8e8; border-bottom: 1px solid var(--border); padding: 6px 16px; }
     #search-bar .inner { max-width: 1000px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
-    #search-bar input { flex: 1; max-width: 400px; padding: 4px 8px; border: 1px solid var(--border); font-size: 13px; font-family: Arial, sans-serif; border-radius: 2px; }
-    #search-bar button { padding: 4px 12px; background: var(--red); color: #fff; border: none; font-size: 13px; cursor: pointer; border-radius: 2px; font-family: Arial, sans-serif; }
+    #search-bar input { flex: 1; max-width: 400px; padding: 4px 8px; border: 1px solid var(--border); font-size: 13px; font-family: Inter, sans-serif; border-radius: 2px; }
+    #search-bar button { padding: 4px 12px; background: var(--red); color: #fff; border: none; font-size: 13px; cursor: pointer; border-radius: 2px; font-family: Inter, sans-serif; }
     #search-bar button:hover { background: var(--red-dark); }
 
     /* LAYOUT */
@@ -43,31 +42,31 @@
 
     /* SIDEBAR */
     .sidebar-module { background: var(--white); border: 1px solid var(--border); margin-bottom: 12px; }
-    .sidebar-module h3 { background: var(--red); color: #fff; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold; padding: 5px 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sidebar-module h3 { background: var(--red); color: #fff; font-size: 12px; font-family: Inter, sans-serif; font-weight: bold; padding: 5px 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     .sidebar-module ul { list-style: none; padding: 8px 10px; }
-    .sidebar-module ul li { font-size: 12px; font-family: Arial, sans-serif; padding: 2px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+    .sidebar-module ul li { font-size: 12px; font-family: Inter, sans-serif; padding: 2px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
     .sidebar-module ul li:last-child { border-bottom: none; }
     .sidebar-module ul li a { color: var(--link); }
     .sidebar-module .count { color: var(--text-muted); font-size: 11px; }
-    .sidebar-module p { font-size: 12px; font-family: Arial, sans-serif; padding: 8px 10px; color: var(--text-muted); line-height: 1.4; }
+    .sidebar-module p { font-size: 12px; font-family: Inter, sans-serif; padding: 8px 10px; color: var(--text-muted); line-height: 1.4; }
 
     /* CONTENT */
     #content { flex: 1; min-width: 0; }
     .works-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; }
-    .works-header h2 { font-size: 16px; font-family: Arial, sans-serif; }
-    .works-header .count { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; }
+    .works-header h2 { font-size: 16px; font-family: Inter, sans-serif; }
+    .works-header .count { font-size: 12px; color: var(--text-muted); font-family: Inter, sans-serif; }
 
     /* FILTER BAR */
-    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; font-family: Arial, sans-serif; font-size: 12px; color: var(--text-muted); }
-    .filter-bar select { font-size: 12px; font-family: Arial, sans-serif; padding: 3px 6px; border: 1px solid var(--border); border-radius: 2px; }
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; font-family: Inter, sans-serif; font-size: 12px; color: var(--text-muted); }
+    .filter-bar select { font-size: 12px; font-family: Inter, sans-serif; padding: 3px 6px; border: 1px solid var(--border); border-radius: 2px; }
 
     /* WORK BLURB */
     .work-blurb { background: var(--white); border: 1px solid var(--border); margin-bottom: 12px; padding: 12px 14px; }
     .work-blurb h4 { font-size: 15px; margin-bottom: 4px; }
     .work-blurb h4 a { color: var(--link); font-family: Playfair Display, serif; cursor: pointer; }
-    .work-blurb .byline { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; margin-bottom: 6px; }
+    .work-blurb .byline { font-size: 12px; color: var(--text-muted); font-family: Inter, sans-serif; margin-bottom: 6px; }
     .work-blurb .required-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
-    .rating-tag, .category-tag, .warning-tag, .complete-tag, .wip-tag { font-size: 11px; font-family: Arial, sans-serif; padding: 1px 6px; border-radius: 2px; border: 1px solid; white-space: nowrap; }
+    .rating-tag, .category-tag, .warning-tag, .complete-tag, .wip-tag { font-size: 11px; font-family: Inter, sans-serif; padding: 1px 6px; border-radius: 2px; border: 1px solid; white-space: nowrap; }
     .rating-E  { background: #ffe4e4; border-color: #c00; color: #900; }
     .rating-M  { background: #ffe4b5; border-color: #cc7700; color: #774400; }
     .rating-T  { background: #e4ffe4; border-color: #009900; color: #005500; }
@@ -77,35 +76,35 @@
     .category-tag { background: #f0f0ff; border-color: #66c; color: #339; }
     .complete-tag { background: #f0fff0; border-color: #6c6; color: #363; }
     .wip-tag      { background: #fffde4; border-color: #cc9; color: #665500; }
-    .work-blurb .fandoms { font-size: 12px; font-family: Arial, sans-serif; margin-bottom: 4px; color: var(--text-muted); }
+    .work-blurb .fandoms { font-size: 12px; font-family: Inter, sans-serif; margin-bottom: 4px; color: var(--text-muted); }
     .work-blurb .fandoms a { color: var(--red); font-weight: bold; }
     .work-blurb .tags-list { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-    .tag { font-size: 11px; font-family: Arial, sans-serif; background: #e8e8e8; border: 1px solid #bbb; padding: 1px 6px; border-radius: 10px; color: var(--text); white-space: nowrap; }
+    .tag { font-size: 11px; font-family: Inter, sans-serif; background: #e8e8e8; border: 1px solid #bbb; padding: 1px 6px; border-radius: 10px; color: var(--text); white-space: nowrap; }
     .tag-ship { background: #fde8e8; border-color: #e0aaaa; color: #700; }
     .tag-char { background: #e8f0fd; border-color: #aabde0; color: #004; }
     .tag-free { background: #e8fde8; border-color: #aae0aa; color: #040; }
-    .work-blurb .summary { font-size: 13px; font-family: Arial, sans-serif; margin-bottom: 8px; line-height: 1.5; border-left: 3px solid var(--border); padding-left: 8px; color: var(--text-muted); }
-    .work-blurb .stats { font-size: 11px; font-family: Arial, sans-serif; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border-light); padding-top: 6px; margin-top: 4px; }
+    .work-blurb .summary { font-size: 13px; font-family: Inter, sans-serif; margin-bottom: 8px; line-height: 1.5; border-left: 3px solid var(--border); padding-left: 8px; color: var(--text-muted); }
+    .work-blurb .stats { font-size: 11px; font-family: Inter, sans-serif; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border-light); padding-top: 6px; margin-top: 4px; }
     .stat-label { color: #999; }
-    .series-line { font-size: 11px; font-family: Arial, sans-serif; color: #777; margin-bottom: 5px; font-style: italic; }
+    .series-line { font-size: 11px; font-family: Inter, sans-serif; color: #777; margin-bottom: 5px; font-style: italic; }
 
     /* EMPTY */
-    .empty-state { background: var(--white); border: 1px solid var(--border); padding: 40px; text-align: center; color: var(--text-muted); font-family: Arial, sans-serif; font-size: 13px; }
+    .empty-state { background: var(--white); border: 1px solid var(--border); padding: 40px; text-align: center; color: var(--text-muted); font-family: Inter, sans-serif; font-size: 13px; }
 
     /* FIC READER */
     #fic-page { display: none; }
     #fic-page .work-meta { background: var(--white); border: 1px solid var(--border); padding: 14px; margin-bottom: 16px; }
     #fic-page .work-meta h2 { font-size: 20px; font-family: Playfair Display, serif; margin-bottom: 8px; }
-    #fic-page .work-meta .meta-row { font-size: 12px; font-family: Arial, sans-serif; color: var(--text-muted); margin-bottom: 4px; }
+    #fic-page .work-meta .meta-row { font-size: 12px; font-family: Inter, sans-serif; color: var(--text-muted); margin-bottom: 4px; }
     #fic-page .work-meta .meta-row strong { color: var(--text); }
-    #fic-page .chapter-text { background: var(--white); border: 1px solid var(--border); padding: 20px 24px; font-size: 14px; font-family: 'Source Sans 3', Arial, sans-serif; line-height: 1.8; }
+    #fic-page .chapter-text { background: var(--white); border: 1px solid var(--border); padding: 20px 24px; font-size: 14px; font-family: 'Source Sans 3', Inter, sans-serif; line-height: 1.8; }
     #fic-page .chapter-text p { margin-bottom: 1em; }
     #fic-page .chapter-text em { font-style: italic; }
     #fic-page .chapter-text hr { border: none; border-top: 1px solid var(--border); margin: 1.5em auto; width: 40%; }
-    .back-link { font-size: 12px; font-family: Arial, sans-serif; margin-bottom: 12px; display: block; }
+    .back-link { font-size: 12px; font-family: Inter, sans-serif; margin-bottom: 12px; display: block; }
 
     /* FOOTER */
-    #footer { background: var(--red); color: #fcc; text-align: center; font-size: 11px; font-family: Arial, sans-serif; padding: 10px; margin-top: 24px; }
+    #footer { background: var(--red); color: #fcc; text-align: center; font-size: 11px; font-family: Inter, sans-serif; padding: 10px; margin-top: 24px; }
 
     @media (max-width: 700px) { #main { flex-direction: column; } #sidebar { width: 100%; } }
   </style>
