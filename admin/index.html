@@ -236,12 +236,24 @@
     <div class="panel-heading">Publish to Site</div>
 
     <div class="export-box">
-      <h3>How publishing works</h3>
-      <p>Your works are saved in this browser. To make them appear on your live site, you export a file and upload it to GitHub. Netlify then updates your site automatically within ~30 seconds.</p>
-      <div class="step"><strong>Step 1.</strong> Click <strong>Export fics.json</strong> below. A file downloads to your computer.</div>
-      <div class="step"><strong>Step 2.</strong> Go to your GitHub repo → open the <code>fics</code> folder → click <code>index.json</code> → click the pencil ✏️ icon to edit.</div>
-      <div class="step"><strong>Step 3.</strong> Select all the text in the editor and delete it. Then open your downloaded <code>index.json</code> in Notepad, copy everything, and paste it in.</div>
-      <div class="step"><strong>Step 4.</strong> Click <strong>Commit changes</strong>. Wait 30 seconds. Your site is updated!</div>
+      <h3>⚠️ Start here — Import your existing fics first</h3>
+      <p>Every time you open the admin in a new browser or clear your cache, it starts empty. Always import your current <code>index.json</code> from GitHub first so you don't lose existing fics.</p>
+      <div class="step"><strong>Step 1.</strong> Go to GitHub → <code>fics/index.json</code> → click the download icon ⬇ (or copy the raw content).</div>
+      <div class="step"><strong>Step 2.</strong> Click <strong>Import fics.json</strong> below and select that file. Your existing fics will load into the admin.</div>
+      <div class="step"><strong>Step 3.</strong> Now add your new fic via the New Work tab. It'll be added on top of your existing ones.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-pub" onclick="document.getElementById('import-input').click()">⬆ Import fics.json</button>
+      <input type="file" id="import-input" accept=".json" style="display:none" onchange="importFics(event)"/>
+    </div>
+
+    <div class="export-box" style="margin-top:12px;">
+      <h3>Then export and publish</h3>
+      <p>Once you've added your new fic, export and upload to GitHub to publish to your live site.</p>
+      <div class="step"><strong>Step 1.</strong> Click <strong>Export fics.json</strong> below. A file downloads.</div>
+      <div class="step"><strong>Step 2.</strong> Go to GitHub → <code>fics/index.json</code> → click ✏️ → select all, delete, paste in the new content.</div>
+      <div class="step"><strong>Step 3.</strong> Click <strong>Commit changes</strong>. Site updates in ~30 seconds!</div>
     </div>
 
     <div class="btn-row">
@@ -377,6 +389,28 @@ function deleteFic(id) {
   localStorage.setItem(KEY, JSON.stringify(fics));
   renderManage();
   toast('Deleted.');
+}
+
+// ── IMPORT ────────────────────────────────────────────────────────────────────
+function importFics(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) { alert('Invalid file — make sure you selected your index.json.'); return; }
+      // Merge: keep imported fics, add any local-only ones that aren't in the import
+      const importedIds = new Set(imported.map(f=>f.id));
+      const localOnly = fics.filter(f=>!importedIds.has(f.id));
+      fics = [...imported, ...localOnly];
+      localStorage.setItem(KEY, JSON.stringify(fics));
+      document.getElementById('export-count').textContent = `${fics.length} work${fics.length!==1?'s':''} loaded.`;
+      toast(`✓ Imported ${imported.length} fic${imported.length!==1?'s':''}! You can now add new works safely.`);
+    } catch { alert('Could not read file. Make sure it\'s a valid index.json.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 // ── EXPORT ────────────────────────────────────────────────────────────────────
